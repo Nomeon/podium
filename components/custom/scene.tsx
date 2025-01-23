@@ -32,14 +32,17 @@ const Scene = () => {
     renderer.setSize(width, height)
     container.append(renderer.domElement)
     const controls = new OrbitControls(camera, renderer.domElement)
+    controls.enabled = false
 
     sceneRef.current = scene
     cameraRef.current = camera
     rendererRef.current = renderer
     controlsRef.current = controls
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-    scene.add(ambientLight);
+    // const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    const hemiLight = new THREE.HemisphereLight('white', 'white', 5);
+    scene.add(hemiLight);
+    // scene.add(ambientLight);
 
     // ------------------------------------------------
     // 1) The "screen" plane using a light-reactive material
@@ -61,11 +64,11 @@ const Scene = () => {
     })
     const posterLogin = new THREE.Mesh(posterGeometry, posterMaterial)
     posterLogin.position.set(1.37, 3.685, 5.98)
-    scene.add(posterLogin)
+    // scene.add(posterLogin)
 
     const posterRegister = new THREE.Mesh(posterGeometry, posterMaterial)
     posterRegister.position.set(-1.3, 3.685, 5.98)
-    scene.add(posterRegister)
+    // scene.add(posterRegister)
 
     // ------------------------------------------------
     // 3) Spotlights for each "projector"
@@ -162,7 +165,7 @@ const Scene = () => {
       gsap.to(camera.position, {
         x: 1.37, 
         y: 3.685, 
-        z: 4.5,
+        z: 4,
         duration: 1.5,
         ease: customEase
       })
@@ -178,7 +181,7 @@ const Scene = () => {
       gsap.to(camera.position, {
         x: -1.3,
         y: 3.685,
-        z: 4.5,
+        z: 4,
         duration: 1.5,
         ease: customEase
       })
@@ -211,10 +214,10 @@ const Scene = () => {
   return (
     <>
       <div ref={containerRef} className="fixed top-0 left-0 z-10 w-dvw h-dvh" />
-      <Link className="fixed top-4 left-4 z-20 bg-white text-black p-4" href="/">Home</Link>
+      {/* <Link className="fixed top-4 left-4 z-20 bg-white text-black p-4" href="/">Home</Link>
       <Link className="fixed top-4 right-4 z-20 text-black p-4 bg-white" href="/stage">Stage</Link>
       <Link className="fixed top-4 right-24 z-20 text-black p-4 bg-white" href='/login'>Login</Link>
-      <Link className="fixed top-4 right-44 z-20 text-black p-4 bg-white" href='/register'>Register</Link>
+      <Link className="fixed top-4 right-44 z-20 text-black p-4 bg-white" href='/register'>Register</Link> */}
     </>
   )
 }

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-// import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@/utils/supabase/server'
 import { formSchema } from '@/components/custom/loginform'
 import { z } from 'zod'
 
@@ -16,7 +16,7 @@ export async function login(values: z.infer<typeof formSchema>) {
     }
 
     revalidatePath('/', 'layout')
-    redirect('/account')
+    redirect('/stage')
 }
 
 export async function loginWithGoogle() {
