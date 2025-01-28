@@ -8,7 +8,6 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 import { usePathname } from "next/navigation"
 import { gsap } from "gsap"
 import { CustomEase } from "gsap/all"
-import Link from "next/link"
 
 const Scene = () => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -16,6 +15,7 @@ const Scene = () => {
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
   const sceneRef = useRef<THREE.Scene | null>(null)
   const controlsRef = useRef<OrbitControls | null>(null)
+  const hemiLightRef = useRef<THREE.HemisphereLight | null>(null)
   const pathname = usePathname()
   gsap.registerPlugin(CustomEase)
 
@@ -39,44 +39,21 @@ const Scene = () => {
     rendererRef.current = renderer
     controlsRef.current = controls
 
-    // const ambientLight = new THREE.AmbientLight(0xffffff, 1);
     const hemiLight = new THREE.HemisphereLight('white', 'white', 5);
+    hemiLightRef.current = hemiLight
     scene.add(hemiLight);
-    // scene.add(ambientLight);
 
-    // ------------------------------------------------
-    // 1) The "screen" plane using a light-reactive material
-    // ------------------------------------------------
     const planeGeometry = new THREE.PlaneGeometry(9, 4)
-    // Use Phong or Standard so it reacts to light
     const planeMaterial = new THREE.MeshPhongMaterial({
       color: 0xffffff,
       side: THREE.DoubleSide,
     })
     const plane = new THREE.Mesh(planeGeometry, planeMaterial)
-    plane.position.set(0, 3.32, -7.85)
-    scene.add(plane)
+    plane.position.set(0.03, 3.32, -7.85)
+    // scene.add(plane)
 
-    const posterGeometry = new THREE.PlaneGeometry(1.12,1.71)
-    const posterMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      side: THREE.DoubleSide,
-    })
-    const posterLogin = new THREE.Mesh(posterGeometry, posterMaterial)
-    posterLogin.position.set(1.37, 3.685, 5.98)
-    // scene.add(posterLogin)
-
-    const posterRegister = new THREE.Mesh(posterGeometry, posterMaterial)
-    posterRegister.position.set(-1.3, 3.685, 5.98)
-    // scene.add(posterRegister)
-
-    // ------------------------------------------------
-    // 3) Spotlights for each "projector"
-    // ------------------------------------------------
-    // (Adjust intensity, angle, distance, etc., to your liking)
     const spotLight1 = new THREE.SpotLight(0xffffff, 2, 0, Math.PI / 4, 0.5, 0.5)
     spotLight1.position.set(-5, 5.5, -7)
-    // Have it aim at the plane
     spotLight1.target = plane
     scene.add(spotLight1)
     scene.add(spotLight1.target)
@@ -138,9 +115,10 @@ const Scene = () => {
   }, [])
 
   useEffect(() => {
-    if (!cameraRef.current || !controlsRef.current) return
+    if (!cameraRef.current || !controlsRef.current || !hemiLightRef.current) return
     const camera = cameraRef.current
     const controls = controlsRef.current
+    const hemiLight = hemiLightRef.current
 
     const customEase = CustomEase.create("custom", "M0,0 C0,0 0.300,0 0.5,0.5 0.700,1 1,1 1,1 ")
 
@@ -160,6 +138,11 @@ const Scene = () => {
         duration: 1.5,
         ease: customEase
       })
+      gsap.to(hemiLight, {
+        intensity: 5,
+        duration: 1.5,
+        ease: customEase
+      })
     } else if (pathname === '/login') {
       // 1.37, 3.685, 5.98
       gsap.to(camera.position, {
@@ -173,6 +156,11 @@ const Scene = () => {
         x: 1.37, 
         y: 3.685,
         z: 10,
+        duration: 1.5,
+        ease: customEase
+      })
+      gsap.to(hemiLight, {
+        intensity: 5,
         duration: 1.5,
         ease: customEase
       })
@@ -192,6 +180,11 @@ const Scene = () => {
         duration: 1.5,
         ease: customEase
       })
+      gsap.to(hemiLight, {
+        intensity: 5,
+        duration: 1.5,
+        ease: customEase
+      })
     }
     else {
       gsap.to(camera.position, { 
@@ -208,17 +201,17 @@ const Scene = () => {
         duration: 1.5,
         ease: customEase
       })
+      gsap.to(hemiLight, {
+        intensity: 0,
+        duration: 1.5,
+        delay: 1.5,
+        ease: customEase
+      })
     }
   }, [pathname])
 
   return (
-    <>
-      <div ref={containerRef} className="fixed top-0 left-0 z-10 w-dvw h-dvh" />
-      {/* <Link className="fixed top-4 left-4 z-20 bg-white text-black p-4" href="/">Home</Link>
-      <Link className="fixed top-4 right-4 z-20 text-black p-4 bg-white" href="/stage">Stage</Link>
-      <Link className="fixed top-4 right-24 z-20 text-black p-4 bg-white" href='/login'>Login</Link>
-      <Link className="fixed top-4 right-44 z-20 text-black p-4 bg-white" href='/register'>Register</Link> */}
-    </>
+    <div ref={containerRef} className="fixed top-0 left-0 z-10 w-dvw h-dvh" />
   )
 }
 

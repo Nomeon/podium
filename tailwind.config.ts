@@ -8,6 +8,9 @@ export default {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+	fontFamily: {
+		'raleway': ['Raleway', 'sans-serif'],
+	},
   	extend: {
   		colors: {
   			background: 'hsl(var(--background))',
