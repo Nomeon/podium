@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { Rating } from 'react-simple-star-rating'
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { logout, getUserDetails, getJoke, rateJoke } from '@/app/stage/actions'
 import * as motion from "motion/react-client"
+import Link from "next/link";
 
 const fillColorArray = [
     "#f17a45",
@@ -70,31 +71,30 @@ export default function Stage() {
     }, []);
 
     return(
-        <>
-            <motion.div className="flex flex-col w-full md:w-2/3 p-4 lg:w-1/2 items-center justify-center relative h-dvh z-30 gap-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 1.5 }}>
-                { jokeText ? <h2 className="font-medium md:text-lg text-center">{jokeText}</h2> : 
-                    <div className="flex flex-col items-center justify-center gap-3 w-full pb-4">
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-2/3" />
-                    </div> 
-                }
-                <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
-                    <Rating
-                        emptyColor="white"
-                        className="flex flex-row"
-                        onClick={handleRating}
-                        initialValue={rating}
-                        allowFraction
-                        size={50}
-                        transition
-                        
-                        fillColorArray={fillColorArray}
-                    />
-                    <Button onClick={logout} variant='outline' className="">Sign out</Button>
-                </div>
-            </motion.div>
-        </>
+        <motion.div className="flex flex-col w-full md:w-2/3 p-4 lg:w-1/2 items-center justify-center relative h-dvh z-30 gap-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 1.5 }}>
+            { jokeText ? <h2 className="font-medium md:text-lg text-center">{jokeText}</h2> : 
+                <div className="flex flex-col items-center justify-center gap-3 w-full pb-4">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-2/3" />
+                </div> 
+            }
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
+                <Rating
+                    emptyColor="white"
+                    className="flex flex-row"
+                    onClick={handleRating}
+                    initialValue={rating}
+                    allowFraction
+                    size={50}
+                    transition
+                    
+                    fillColorArray={fillColorArray}
+                />
+                <Link href="/add-joke" className={buttonVariants({ variant: "outline" })}>Add a joke</Link>
+                <Button onClick={logout} className="md:-ml-4">Sign out</Button>
+            </div>
+        </motion.div>
     )
 }
