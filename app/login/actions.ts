@@ -6,6 +6,13 @@ import { createClient } from '@/utils/supabase/server'
 import { formSchema } from '@/components/custom/loginform'
 import { z } from 'zod'
 
+const getURL = () => {
+  console.log(process.env.VERCEL_ENV)
+  return process.env.VERCEL_ENV === 'production' 
+    ? 'https://humor-podium.vercel.app/auth/callback'
+    : 'http://localhost:3000/auth/callback'
+}
+
 export async function login(values: z.infer<typeof formSchema>) {
     const supabase = await createClient()
 
@@ -22,10 +29,12 @@ export async function login(values: z.infer<typeof formSchema>) {
 export async function loginWithGoogle() {
   const supabase = await createClient()
 
+  const url = getURL()
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: 'http://localhost:3000/auth/callback',
+      redirectTo: url,
     },
   })
   
